@@ -57,3 +57,30 @@ function ttt() {
         alert('два корня: '+roots[0]+' и '+roots[1]);
 }
 squareRootsTests();
+
+
+
+if (arr[index].kind === 'check') {
+    el.type = 'checkbox';
+}
+else if (teg2 === 'select') {
+    for (var j = 0; j < arr[index].variants.length; j++) {
+        var newOption = new Option(arr[index].variants[j].text, arr[index].variants[j].value);
+        el.appendChild(newOption);
+    }
+}
+else if (arr[index].kind === 'radio') {
+    var span = document.createElement('span');
+    span.textContent = arr[index].variants[0].text;
+    form.appendChild(span);
+    form.removeChild(el);
+    span.appendChild(el);
+    el.type = 'radio';
+    el.value = arr[index].variants[0].value;
+    for (var k = 1; k < arr[index].variants.length; k++) {
+        var radio = span.cloneNode(true);
+        form.appendChild(span);
+        span.textContent = arr[index].variants[k].text;
+        radio.value = arr[index].variants[k].value;
+    }
+}
