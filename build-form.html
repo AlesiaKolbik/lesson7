@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+
+</head>
+<body>
+<script>
+    var formDef1=
+        [
+            {label:'Название сайта:',kind:'longtext',name:'sitename'},
+            {label:'URL сайта:',kind:'longtext',name:'siteurl'},
+            {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
+            {label:'E-mail для связи:',kind:'shorttext',name:'email'},
+            {label:'Рубрика каталога:',kind:'combo',name:'division',
+                variants:[{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
+            {label:'Размещение:',kind:'radio',name:'payment',
+                variants:[{text:'бесплатное',value:1},{text:'платное',value:2},{text:'VIP',value:3}]},
+            {label:'Разрешить отзывы:',kind:'check',name:'votes'},
+            {label:'Описание сайта:',kind:'memo',name:'description'},
+            {label:'Опубликовать',kind:'submit'}
+        ];
+
+    var formDef2=
+        [
+            {label:'Фамилия:',kind:'longtext',name:'lastname'},
+            {label:'Имя:',kind:'longtext',name:'firstname'},
+            {label:'Отчество:',kind:'longtext',name:'secondname'},
+            {label:'Возраст:',kind:'number',name:'age'},
+            {label:'Зарегистрироваться',kind:'submit'}
+        ];
+
+
+    function buildForm(arr) {
+        var form = document.createElement('form');
+        document.body.appendChild(form);
+        document.forms[0].action = 'http://fe.it-academy.by/TestForm.php ';
+        document.forms[0].method = 'get';
+        form.setAttribute('style','display: flex;flex-direction: column;');
+
+        for (var i = 0; i < arr.length; i++) {
+            if(arr[i].kind === 'longtext' || arr[i].kind === 'number' || arr[i].kind === 'shorttext' || arr[i].kind === 'check'){
+                createNewElementInForm(arr,i,form,'label','input');
+            }
+            else if(arr[i].kind === 'combo'){
+                createNewElementInForm(arr,i,form,'label','select');
+            }
+            else if(arr[i].kind === 'radio'){
+                createNewElementInForm(arr,i,form,'label','input');
+            }
+            else if(arr[i].kind === 'memo'){
+                createNewElementInForm(arr,i,form,'label','textarea');
+            }
+            else if(arr[i].kind === 'submit'){
+                createNewElementInForm(arr,i,form,'input');
+                var input = document.createElement('input');
+                form.appendChild(input);
+                input.type = 'submit';
+                input.value = arr[i].label;
+            }
+        }
+
+    }
+
+
+    function createNewElementInForm(arr, index, form, teg1,teg2) {
+        var label = document.createElement(teg1);
+        var el = document.createElement(teg2);
+        form.appendChild(label);
+        form.appendChild(el);
+        label.textContent = arr[index].label;
+        label.htmlFor = arr[index].name;
+        el.name = arr[index].name;
+        if (arr[index].kind === 'check') {
+            el.type = 'checkbox';
+        }
+        else if (teg2 === 'select') {
+            for (var j = 0; j < arr[index].variants.length; j++) {
+                var newOption = new Option(arr[index].variants[j].text, arr[index].variants[j].value);
+                el.appendChild(newOption);
+            }
+        }
+        else if (arr[index].kind === 'radio') {
+            var span = document.createElement('span');
+            span.textContent = arr[index].variants[0].text;
+            form.appendChild(span);
+            el.parentNode.removeChild(el);
+            span.appendChild(el);
+            el.type = 'radio';
+            el.value = arr[index].variants[0].value;
+            for (var k = 1; k < arr[index].variants.length; k++) {
+                var radio = span.cloneNode(true);
+                form.appendChild(span);
+                span.textContent = arr[index].variants[k].text;
+                radio.value = arr[index].variants[k].value;
+            }
+        }
+    }
+        buildForm(formDef1, 'form');
+        buildForm(formDef2, 'form');
+
+
+</script>
+</body>
+</html>
