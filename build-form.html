@@ -34,67 +34,103 @@
     function buildForm(arr) {
         var form = document.createElement('form');
         document.body.appendChild(form);
-        document.forms[0].action = 'http://fe.it-academy.by/TestForm.php ';
+        document.forms[0].action = 'http://fe.it-academy.by/TestForm.php';
         document.forms[0].method = 'get';
-        form.setAttribute('style','display: flex;flex-direction: column;');
+        form.setAttribute('style','display: flex;flex-direction: column;margin:50px;');
 
         for (var i = 0; i < arr.length; i++) {
-            if(arr[i].kind === 'longtext' || arr[i].kind === 'number' || arr[i].kind === 'shorttext' || arr[i].kind === 'check'){
-                createNewElementInForm(arr,i,form,'label','input');
+            if(arr[i].kind === 'longtext' || arr[i].kind === 'number' || arr[i].kind === 'shorttext'){
+                createInput(arr,i,form);
+            }
+            else if(arr[i].kind === 'check') {
+                createCheckbox(arr,i,form);
             }
             else if(arr[i].kind === 'combo'){
-                createNewElementInForm(arr,i,form,'label','select');
+                createCombo(arr,i,form);
             }
             else if(arr[i].kind === 'radio'){
-                createNewElementInForm(arr,i,form,'label','input');
+                createRadioButton(arr,i,form);
             }
             else if(arr[i].kind === 'memo'){
-                createNewElementInForm(arr,i,form,'label','textarea');
+                createTextarea(arr,i,form);
             }
             else if(arr[i].kind === 'submit'){
-                createNewElementInForm(arr,i,form,'input');
-                var input = document.createElement('input');
-                form.appendChild(input);
-                input.type = 'submit';
-                input.value = arr[i].label;
+                createSubmit(arr,i,form);
             }
         }
 
     }
-
-
-    function createNewElementInForm(arr, index, form, teg1,teg2) {
-        var label = document.createElement(teg1);
-        var el = document.createElement(teg2);
+    function createInput(array,index,form) {
+        var label = document.createElement('label');
+        var input = document.createElement('input');
         form.appendChild(label);
-        form.appendChild(el);
-        label.textContent = arr[index].label;
-        label.htmlFor = arr[index].name;
-        el.name = arr[index].name;
-        if (arr[index].kind === 'check') {
-            el.type = 'checkbox';
+        form.appendChild(input);
+        label.textContent = array[index].label;
+        label.htmlFor = array[index].name;
+        input.name = array[index].name;
+    }
+
+    function createCombo(array, index, form) {
+        var label = document.createElement('label');
+        var select = document.createElement('select');
+        form.appendChild(label);
+        form.appendChild(select);
+        label.textContent = array[index].label;
+        select.name = array[index].name;
+        label.htmlFor = array[index].name;
+        for (var i = 0; i < array[index].variants.length; i++) {
+            var newOption = new Option(array[index].variants[i].text, array[index].variants[i].value);
+            select.appendChild(newOption);
         }
-        else if (teg2 === 'select') {
-            for (var j = 0; j < arr[index].variants.length; j++) {
-                var newOption = new Option(arr[index].variants[j].text, arr[index].variants[j].value);
-                el.appendChild(newOption);
-            }
-        }
-        else if (arr[index].kind === 'radio') {
-            var span = document.createElement('span');
-            span.textContent = arr[index].variants[0].text;
-            form.appendChild(span);
-            el.parentNode.removeChild(el);
-            span.appendChild(el);
-            el.type = 'radio';
-            el.value = arr[index].variants[0].value;
-            for (var k = 1; k < arr[index].variants.length; k++) {
-                var radio = span.cloneNode(true);
-                form.appendChild(span);
-                span.textContent = arr[index].variants[k].text;
-                radio.value = arr[index].variants[k].value;
-            }
-        }
+    }
+     function createRadioButton(array, index, form) {
+         var label = document.createElement('label');
+         form.appendChild(label);
+         label.textContent = array[index].label;
+         label.htmlFor = array[index].name;
+
+         for (var i = 0; i < array[index].variants.length; i++) {
+             var span = document.createElement('span');
+             var input = document.createElement('input');
+             form.appendChild(span);
+             span.textContent = array[index].variants[i].text;
+             span.appendChild(input);
+             input.name = array[index].name;
+             form.appendChild(span);
+             input.type = 'radio';
+             input.value = array[index].variants[i].value;
+         }
+     }
+
+     function createTextarea(array, index, form) {
+         var label = document.createElement('label');
+         var textarea = document.createElement('textarea');
+         form.appendChild(label);
+         form.appendChild(textarea);
+         label.textContent = array[index].label;
+         label.htmlFor = array[index].name;
+         textarea.name = array[index].name;
+         textarea.cols = 10;
+         textarea.rows = 5;
+     }
+
+     function createSubmit(array, index, form) {
+         var input = document.createElement('input');
+         form.appendChild(input);
+         input.type = 'submit';
+         input.value = array[index].label;
+         input.style.width = '200px';
+         input.style.marginTop = '20px';
+    }
+    function createCheckbox(array, index, form){
+        var label = document.createElement('label');
+        var input = document.createElement('input');
+        form.appendChild(label);
+        form.appendChild(input);
+        label.textContent = array[index].label;
+        label.htmlFor = array[index].name;
+        input.name = array[index].name;
+        input.type = 'checkbox';
     }
         buildForm(formDef1, 'form');
         buildForm(formDef2, 'form');
