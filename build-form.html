@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Form</title>
@@ -36,23 +38,27 @@
         document.body.appendChild(form);
         document.forms[0].action = 'http://fe.it-academy.by/TestForm.php';
         document.forms[0].method = 'get';
-        form.setAttribute('style','display: flex;flex-direction: column;margin:50px;');
+        form.setAttribute('style', 'width:40%;margin:20px;');
 
         for (var i = 0; i < arr.length; i++) {
+            var div = document.createElement('div');
+            form.appendChild(div);
+            div.style.marginBottom ='5px';
+
             if(arr[i].kind === 'longtext' || arr[i].kind === 'number' || arr[i].kind === 'shorttext'){
-                createInput(arr,i,form);
+                createInputWithLabel(arr,i,div,'text');
             }
             else if(arr[i].kind === 'check') {
-                createCheckbox(arr,i,form);
+                createInputWithLabel(arr,i,div,'checkbox');
             }
             else if(arr[i].kind === 'combo'){
-                createCombo(arr,i,form);
+                createComboWithLabel(arr,i,div);
             }
             else if(arr[i].kind === 'radio'){
-                createRadioButton(arr,i,form);
+                createRadioButtonWithLabel(arr,i,div);
             }
             else if(arr[i].kind === 'memo'){
-                createTextarea(arr,i,form);
+                createTextareaWithLabel(arr,i,div);
             }
             else if(arr[i].kind === 'submit'){
                 createSubmit(arr,i,form);
@@ -60,58 +66,49 @@
         }
 
     }
-    function createInput(array,index,form) {
-        var label = document.createElement('label');
+    function createInputWithLabel(array,index,node,type) {
+        createLabel(array, index, node);
         var input = document.createElement('input');
-        form.appendChild(label);
-        form.appendChild(input);
-        label.textContent = array[index].label;
-        label.htmlFor = array[index].name;
+        node.appendChild(input);
         input.name = array[index].name;
+        input.type = type;
     }
 
-    function createCombo(array, index, form) {
-        var label = document.createElement('label');
+
+
+    function createComboWithLabel(array, index, node) {
+        createLabel(array, index, node);
         var select = document.createElement('select');
-        form.appendChild(label);
-        form.appendChild(select);
-        label.textContent = array[index].label;
+        node.appendChild(select);
         select.name = array[index].name;
-        label.htmlFor = array[index].name;
         for (var i = 0; i < array[index].variants.length; i++) {
             var newOption = new Option(array[index].variants[i].text, array[index].variants[i].value);
             select.appendChild(newOption);
         }
     }
-     function createRadioButton(array, index, form) {
-         var label = document.createElement('label');
-         form.appendChild(label);
-         label.textContent = array[index].label;
-         label.htmlFor = array[index].name;
 
+     function createRadioButtonWithLabel(array, index, node) {
+         createLabel(array, index, node);
          for (var i = 0; i < array[index].variants.length; i++) {
              var span = document.createElement('span');
              var input = document.createElement('input');
-             form.appendChild(span);
+             node.appendChild(span);
              span.textContent = array[index].variants[i].text;
              span.appendChild(input);
              input.name = array[index].name;
-             form.appendChild(span);
+             node.appendChild(span);
              input.type = 'radio';
              input.value = array[index].variants[i].value;
+             input.style.marginRight = '10px';
          }
      }
 
-     function createTextarea(array, index, form) {
-         var label = document.createElement('label');
+     function createTextareaWithLabel(array, index, node) {
+         createLabel(array, index, node);
          var textarea = document.createElement('textarea');
-         form.appendChild(label);
-         form.appendChild(textarea);
-         label.textContent = array[index].label;
-         label.htmlFor = array[index].name;
+         node.appendChild(textarea);
          textarea.name = array[index].name;
-         textarea.cols = 10;
-         textarea.rows = 5;
+         textarea.setAttribute('style','width: 100%;height:50px');
      }
 
      function createSubmit(array, index, form) {
@@ -119,19 +116,16 @@
          form.appendChild(input);
          input.type = 'submit';
          input.value = array[index].label;
-         input.style.width = '200px';
-         input.style.marginTop = '20px';
+
     }
-    function createCheckbox(array, index, form){
+    function createLabel(array, index, node) {
         var label = document.createElement('label');
-        var input = document.createElement('input');
-        form.appendChild(label);
-        form.appendChild(input);
+        node.appendChild(label);
         label.textContent = array[index].label;
         label.htmlFor = array[index].name;
-        input.name = array[index].name;
-        input.type = 'checkbox';
+        label.setAttribute('style','display: inline-block;width: 150px;');
     }
+
         buildForm(formDef1, 'form');
         buildForm(formDef2, 'form');
 
