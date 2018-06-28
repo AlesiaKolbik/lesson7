@@ -32,11 +32,8 @@ function isFormValid(e) {
 form.addEventListener('submit', function (e) {
     if(!isFormValid(e)) {
         e.preventDefault();
-        form.getElementsByClassName('error')[0].focus();
-        form.getElementsByClassName('error')[0].scrollIntoView();
-
+        form.getElementsByClassName('error')[0].childNodes[1].focus();
     }
-    else e.submit();
 });
 
 
@@ -62,11 +59,13 @@ function validForm(e) {
         else if (e.name === 'email') {   //проверяем email
             if (valueInput.indexOf('@') === -1) {
                 e.parentNode.appendChild(createError('*Введите валидный адрес email'));
+                e.parentNode.classList.add('error');
             }
         }
         else if (e.name === 'visitors' && parseInt(valueInput) < 0) {  //проверяем ввод числа
             let error = createError('*Число не может быть отрицательным');
             e.parentNode.appendChild(error);
+            e.parentNode.classList.add('error');
         }
         else if (e.name === 'payment') {
             validRadioGroup(e);
@@ -109,6 +108,7 @@ function validUrl(e,valueInput) {
     }
     else {
         e.parentNode.appendChild(createError('*Введите валидный адрес сайта'));
+        e.parentNode.classList.add('error');
     }
 
 }
