@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Form</title>
+<style>
 
+</style>
 </head>
 <body>
 <script>
@@ -14,7 +16,7 @@
             {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
             {label:'E-mail для связи:',kind:'shorttext',name:'email'},
             {label:'Рубрика каталога:',kind:'combo',name:'division',
-                variants:[{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
+                variants:[{text:'',value:''},{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
             {label:'Размещение:',kind:'radio',name:'payment',
                 variants:[{text:'бесплатное',value:1},{text:'платное',value:2},{text:'VIP',value:3}]},
             {label:'Разрешить отзывы:',kind:'check',name:'votes'},
@@ -38,8 +40,14 @@
         for (var i = 0; i < arr.length; i++) {
             var div = createWrapperDiv(form);
 
-            if(arr[i].kind === 'longtext' || arr[i].kind === 'number' || arr[i].kind === 'shorttext'){
-                createInputWithLabel(arr,i,div,'text');
+            if(arr[i].kind === 'longtext') {
+                createInputWithLabel(arr, i, div, 'text');
+            }
+            else if(arr[i].kind === 'number'){
+                createInputWithLabel(arr,i,div,'number');
+            }
+            else if(arr[i].kind === 'shorttext'){
+                createInputWithLabel(arr,i,div,'email');
             }
             else if(arr[i].kind === 'check') {
                 createInputWithLabel(arr,i,div,'checkbox');
@@ -95,23 +103,23 @@
         }
     }
 
-     function createRadioButtonWithLabel(array, index, node) {
-         createLabel(array, index, node);
-         for (var i = 0; i < array[index].variants.length; i++) {
-             var span = document.createElement('span');
-             var input = document.createElement('input');
-             node.appendChild(span);
-             span.textContent = array[index].variants[i].text;
-             span.appendChild(input);
-             input.name = array[index].name;
-             node.appendChild(span);
-             input.type = 'radio';
-             input.value = array[index].variants[i].value;
-             input.style.marginRight = '10px';
-         }
-     }
+    function createRadioButtonWithLabel(array, index, node) {
+        createLabel(array, index, node);
+        for (var i = 0; i < array[index].variants.length; i++) {
+            var span = document.createElement('span');
+            var input = document.createElement('input');
+            node.appendChild(span);
+            span.textContent = array[index].variants[i].text;
+            node.appendChild(input);
+            input.name = array[index].name;
+            input.type = 'radio';
+            input.value = array[index].variants[i].value;
+            input.style.marginRight = '10px';
+        }
+    }
 
-     function createTextareaWithLabel(array, index, node) {
+
+    function createTextareaWithLabel(array, index, node) {
          createLabel(array, index, node);
          var textarea = document.createElement('textarea');
          node.appendChild(textarea);
@@ -124,6 +132,7 @@
          form.appendChild(input);
          input.type = 'submit';
          input.value = array[index].label;
+         input.id = 'btn';
 
     }
 
@@ -136,9 +145,9 @@
     }
 
     buildForm(formDef1, 'form');
-    buildForm(formDef2, 'form');
 
 
 </script>
+<script src="valid_form.js"></script>
 </body>
 </html>
