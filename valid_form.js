@@ -17,7 +17,7 @@ function isFormValid(e) {
         for(let j = 0;j<childNodes[i].childNodes.length;j++) {
             if (childNodes[i].childNodes[j].nodeName !== 'LABEL' && childNodes[i].childNodes[j].nodeName !== 'SPAN' && childNodes[i].childNodes[j].nodeName !== 'STRONG') {
                  validForm(childNodes[i].childNodes[j]);
-                 if(childNodes[i].childNodes[j].name = 'payment'){
+                 if(childNodes[i].childNodes[j].name === 'payment'){
                     j = childNodes[i].childNodes.length
                 }
             }
@@ -39,7 +39,7 @@ form.addEventListener('submit', function (e) {
 
 
 function validForm(e) {
-    let valueInput = '' + e.value;
+    let valueInput = e.value;
 
     if(!valueInput){   //если нет введенных данных в input
         if(e.parentNode.className !== 'error') {
@@ -85,7 +85,7 @@ function validRadioGroup(e) {
         e.parentNode.appendChild(createError('*Сделайте выбор'));
         e.parentNode.classList.add('error');
     }
-    else if(e.parentNode.className === 'error'){
+    else if(count !== radioGroup.length && e.parentNode.className === 'error'){
         e.parentNode.removeChild(e.parentNode.lastChild);
         e.parentNode.classList.remove('error');
     }
