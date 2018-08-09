@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Form</title>
-<style>
 
-</style>
 </head>
 <body>
+<div></div>
 <script>
-    var formDef1=
-        [
-            {label:'Название сайта:',kind:'longtext',name:'sitename'},
-            {label:'URL сайта:',kind:'longtext',name:'siteurl'},
-            {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
-            {label:'E-mail для связи:',kind:'shorttext',name:'email'},
-            {label:'Рубрика каталога:',kind:'combo',name:'division',
-                variants:[{text:'',value:''},{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
-            {label:'Размещение:',kind:'radio',name:'payment',
-                variants:[{text:'бесплатное',value:1},{text:'платное',value:2},{text:'VIP',value:3}]},
-            {label:'Разрешить отзывы:',kind:'check',name:'votes'},
-            {label:'Описание сайта:',kind:'memo',name:'description'},
-            {label:'Опубликовать',kind:'submit'}
-        ];
+    "use strict";
 
-    var formDef2=
-        [
-            {label:'Фамилия:',kind:'longtext',name:'lastname'},
-            {label:'Имя:',kind:'longtext',name:'firstname'},
-            {label:'Отчество:',kind:'longtext',name:'secondname'},
-            {label:'Возраст:',kind:'number',name:'age'},
-            {label:'Зарегистрироваться',kind:'submit'}
-        ];
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("get", "data.json", true);
+    oReq.send();
+
+    function reqListener() {
+        if (this.status === 200) { // 200 OK
+
+            var form = JSON && typeof(JSON.stringify) == 'function'
+                ? JSON.parse(this.responseText)
+                : eval("(" + this.responseText + ")"); // Для старых браузеров IE6, IE7
+            console.log(form);
+            buildForm(form['formDef1'], 'form');
+            buildForm(form['formDef2'], 'form');
+
+        }
+        else { // не 200 - значит вывести текст ошибки
+            console.log(this.statusText);
+        }
+    }
+
+
+
 
 
     function buildForm(arr) {
@@ -144,7 +145,6 @@
         label.setAttribute('style', 'display: inline-block;width: 150px;');
     }
 
-    buildForm(formDef1, 'form');
 
 
 </script>
