@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Form</title>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div></div>
@@ -21,7 +21,6 @@
             var form = JSON && typeof(JSON.stringify) == 'function'
                 ? JSON.parse(this.responseText)
                 : eval("(" + this.responseText + ")"); // Для старых браузеров IE6, IE7
-            console.log(form);
             buildForm(form['formDef1'], 'form');
             buildForm(form['formDef2'], 'form');
 
@@ -30,10 +29,6 @@
             console.log(this.statusText);
         }
     }
-
-
-
-
 
     function buildForm(arr) {
         var form = createForm();
@@ -144,10 +139,8 @@
         label.htmlFor = array[index].name;
         label.setAttribute('style', 'display: inline-block;width: 150px;');
     }
-
-
-
 </script>
+
 <script src="valid_form.js"></script>
 </body>
 </html>

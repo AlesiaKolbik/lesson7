@@ -1,17 +1,17 @@
 "use strict";
 
-document.onload = function () {
 
-    let form = document.forms[0];
+    const regExpURL = /^https*\:\/\/\w+\.\w+|\-\.\w+$/;
+    const regExpEmail = /^.+@.+\..+/;
+    let ip;
 
-
-    form.addEventListener('focusout', function (e) {
+    document.addEventListener('focusout', function (e) {
         e = e.target;
         validForm(e);
     });
 
     function isFormValid(e) {
-        form = e.target;
+        let form = e.target;
         let result = true;
         let childNodes = form.childNodes;
         for (let i = 0; i < childNodes.length; i++) {
@@ -30,7 +30,8 @@ document.onload = function () {
         return result;
     }
 
-    form.addEventListener('submit', function (e) {
+    document.addEventListener('submit', function (e) {
+        let form = e.target;
         if (!isFormValid(e)) {
             e.preventDefault();
             form.getElementsByClassName('error')[0].childNodes[1].focus();
@@ -54,10 +55,22 @@ document.onload = function () {
                 e.parentNode.classList.remove('error');
             }
             if (e.name === 'siteurl') {    //проверяем ссылку
-                e.value = validUrl(e, valueInput) || "";
+                if(!validUrl(e, valueInput)){
+                    e.parentNode.appendChild(createError('*Введите валидный адрес сайта'));
+                    e.parentNode.classList.add('error');
+                }
+                setTimeout(function () {   //проверяем проходит ли адрес и домен, если нет - выводим ошибку ,далее проверяем результат  запроса на сервер, и если вернулась пустая строка выводим ошибку
+                    if(!ip){
+                        e.parentNode.appendChild(createError('*Введите валидный адрес сайта'));
+                        e.parentNode.classList.add('error');
+                    }
+                    else{
+                        console.log(ip);
+                    }
+                },2000);
             }
             else if (e.name === 'email') {   //проверяем email
-                if (valueInput.indexOf('@') === -1) {
+                if (!regExpEmail.test(valueInput)) {
                     e.parentNode.appendChild(createError('*Введите валидный адрес email'));
                     e.parentNode.classList.add('error');
                 }
@@ -99,18 +112,30 @@ document.onload = function () {
     }
 
     function validUrl(e, valueInput) {
-        let protocol = 'http';
-        if (valueInput.indexOf('.') !== -1) {
-            if (valueInput.indexOf(protocol) === -1) {
-                return protocol + '://' + valueInput + '/';
-            }
-            else return valueInput;
+        if (regExpURL.test(valueInput) && validUrlAjax(valueInput)) {
+            return true;
         }
-        else {
-            e.parentNode.appendChild(createError('*Введите валидный адрес сайта'));
-            e.parentNode.classList.add('error');
-        }
-
+        return false;
     }
 
+function validUrlAjax(valueInput) {
+    const regExpDomain = /\w+\.\w+\-*\w*\.(ru|by|com|net|org)/;
+    const ajaxHandlerScript = "http://fe.it-academy.by/TestAjax3.php";
+    let domainMatch = valueInput.match(regExpDomain);
+    let domain;
+
+    if(domainMatch) {
+        domain = domainMatch[0];
+        $.ajax(ajaxHandlerScript,
+            {type: 'GET', dataType: 'text', data: {func: 'GET_DOMAIN_IP', domain: domain},
+                success:function(data) { ip = data;}, error:errorHandler}
+        );
+
+        return true;
+    }
+    else return false;
 }
+function errorHandler(jqXHR,statusStr,errorStr) {
+    alert(statusStr+' '+errorStr);
+}
+
